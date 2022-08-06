@@ -23,9 +23,11 @@ cursor = connection.cursor()
 def insertData():
     try:
         jsonData = request.get_json()
+        jsonData = json.dumps(jsonData)
         print(jsonData,type(jsonData))
         temperature = str(jsonData["temperature"])
         humitity = str(jsonData["humitity"])
+        print(temperature,humitity)
         cursor.callproc('public."INSERT"',(temperature,humitity))
         connection.commit()
         return jsonify({"message":"Success"})
