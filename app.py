@@ -26,7 +26,7 @@ def insertData():
         #jsonData = json.dumps(jsonData)
         print(jsonData,type(jsonData))
         temperature = str(jsonData["temperature"])
-        humitity = str(jsonData["humitity"])
+        humitity = str(jsonData["humidity"])
         print(temperature,humitity,'DEBUGGER')
         cursor.callproc('public."INSERT"',(temperature,humitity))
         connection.commit()
