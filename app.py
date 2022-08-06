@@ -1,5 +1,5 @@
 #app.py
-from flask import Flask,request,jsonify
+from flask import Flask,request,jsonify,render_template
 import psycopg2
 import json
 
@@ -31,9 +31,10 @@ def insertData():
 def hello():
     cursor.execute('select * from "test"')
     rows = cursor.fetchall()
-    dic=['id','name']
-    aux=[]
-    for row in rows:
-        aux.append(dict(zip(dic, row)))
-    jsonS=json.dumps(aux)
-    return jsonS
+    # dic=['id','name']
+    # aux=[]
+    # for row in rows:
+    #     aux.append(dict(zip(dic, row)))
+    # jsonS=json.dumps(aux)
+    #return jsonS
+    return render_template('template.html', objets=rows)
