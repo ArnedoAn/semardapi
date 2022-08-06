@@ -23,6 +23,7 @@ cursor = connection.cursor()
 def insertData():
     try:
         jsonData = request.get_json()
+        print(jsonData)
         jsonData.toJSON()
         temperature = str(jsonData["temperature"])
         humitity = str(jsonData["humitity"])
