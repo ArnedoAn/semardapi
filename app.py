@@ -3,6 +3,11 @@ from flask import Flask,request,jsonify,render_template
 import psycopg2
 import json
 
+class Object:
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, 
+            sort_keys=True, indent=4)
+
 app = Flask(__name__)
 
 connection = psycopg2.connect(
@@ -18,9 +23,7 @@ cursor = connection.cursor()
 def insertData():
     try:
         jsonData = request.get_json()
-        print(jsonData)
-        jsonData = json.loads(jsonData)
-        print(jsonData)
+        jsonData.toJSON()
         temperature = str(jsonData["temperature"])
         humitity = str(jsonData["humitity"])
         #cursor.execute('CALL INSERT(%s,%s);',(temperature,humitity,))
