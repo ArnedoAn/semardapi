@@ -18,6 +18,9 @@ cursor = connection.cursor()
 def insertData():
     try:
         jsonData = request.get_json()
+        print(jsonData)
+        jsonData = json.loads(jsonData)
+        print(jsonData)
         temperature = str(jsonData["temperature"])
         humitity = str(jsonData["humitity"])
         #cursor.execute('CALL INSERT(%s,%s);',(temperature,humitity,))
