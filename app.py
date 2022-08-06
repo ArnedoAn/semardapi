@@ -18,23 +18,36 @@ cursor = connection.cursor()
 def insertData():
     try:
         jsonData = request.get_json()
-        name = jsonData["name"]
-        cursor.execute('insert into public."test"(name) values(%s)',(name,))
+        temperature = str(jsonData["temperature"])
+        humitity = str(jsonData["humitity"])
+        #cursor.execute('CALL INSERT(%s,%s);',(temperature,humitity,))
+        cursor.callproc('public."INSERT"',(temperature,humitity))
         connection.commit()
         return jsonify({"message":"Success"})
     except Exception as ex:
+        connection.rollback()
         print(ex)
-        return jsonify({"message":"Error"})
+        return jsonify({"message":"error", "error":ex})
 
 
 @app.get('/')
-def hello():
-    cursor.execute('select * from "test"')
-    rows = cursor.fetchall()
-    # dic=['id','name']
-    # aux=[]
-    # for row in rows:
-    #     aux.append(dict(zip(dic, row)))
-    # jsonS=json.dumps(aux)
-    #return jsonS
-    return render_template('template.html', objets=rows)
+def getall():
+    try:
+        cursor.callproc('public."SELECT"')
+        rows = cursor.fetchall()
+        return render_template('template.html', objets=rows)
+    except Exception as ex:
+        connection.rollback()
+        print(ex)
+        return jsonify({"message":"error", "error":ex})
+
+@app.get('/lastone')
+def getone():
+    try:
+        cursor.callproc('public."SELECT_ONLY"')
+        rows = cursor.fetchall()
+        return render_template('template.html', objets=rows)
+    except Exception as ex:
+        connection.rollback()
+        print(ex)
+        return jsonify({"message":"error", "error":ex})
