@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+    <body>
+      <div class="login-page">
+        <div class="form">
+          <form class="login-form" action="/register" method="POST">
+            <input type="text" name="username" placeholder="username"/>
+            <input type="password" name="password" placeholder="password"/>
+            <button>Sing Up</button>
+            <p class="message">Already registered? <a href="login">Sing in</a></p>
+          </form>
+        </div>
+      </div>
+      <script type="text/javascript">
+        $('.message a').click(function(){
+          $('form').animate({height: "toggle", opacity: "toggle"}, "slow");
+        });
+      </script>
+    </body>
+</html>

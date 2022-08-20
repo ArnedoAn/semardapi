@@ -31,50 +31,61 @@ def token_required(func):
     return decorated
 
 
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    username = request.form['username']
-    password = request.form['password']
-    bpassword = password.encode('utf-8')
-    hash = bcrypt.hashpw(bpassword, salt)
-    try:
-        cursor.callproc('public."REGISTER"', (username, hash))
-        cursor.commit()
-        return render_template('login.html')
-    except Exception as ex:
-        connection.rollback()
-        print(ex)
-        return jsonify({'message': 'Error registering', 'error': ex})
-
-
-@app.route('/login', methods=['GET','POST'])
-def login():
-    if request.method=='GET':
-        if not session.get('logged_in'):
-             return render_template('login.html')
-        else:
-            return 'Logged in currently'    
+    if request.method == 'POST':
+        username = str(request.form['username'])
+        password = str(request.form['password'])  # hola
+        bpassword = password.encode('utf-8')  # b'hola'
+        hash = str(bcrypt.hashpw(bpassword, salt))
+        try:
+            cursor.callproc('public."REGISTER"', (username, hash))
+            connection.commit()
+            return render_template('login.html')
+        except Exception as ex:
+            connection.rollback()
+            print(ex)
+            return jsonify({'message': 'Error registering', 'error': ex})
     else:
-        username = request.form['username']
-        password = request.form['password']
-        cursor.callproc('public."LOGIN"', (username,))
-        row = cursor.fetchone
-        pwdHash = row[1]
-        if bcrypt.checkpw(password, pwdHash):
-            session['logged_in'] = True
-            token = jwt.encode({
-                'user': username,
-                'password': pwdHash
-            }, app.config['SECRET_KEY'])
-            return jsonify({'message': 'Loggen in', 'token': token.decode('utf-8')})
-        else:
-            return make_response('Unable to verify', 403, {'WWW-Authenticate': 'Authentication Failed'})
-   
+        return render_template("register.html")
 
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        if not session.get('logged_in'):
+            return render_template('login.html')
+        else:
+            return 'Logged in currently'
+    else:
+        username = str(request.form['username'])
+        password = str(request.form['password'])
+        try:
+            cursor.callproc('public."LOGIN"', (username,))
+            row = cursor.fetchone()
+            print(row)
+            if row is None:
+                print(row)
+                return "Usuario no existe"
+            else:    
+                pwdHash = row[0]
+                if bcrypt.checkpw(password, pwdHash):
+                    session['logged_in'] = True
+                    token = jwt.encode({
+                        'user': username,
+                        'password': pwdHash
+                    }, app.config['SECRET_KEY'])
+                    return jsonify({'message': 'Loggen in', 'token': token.decode('utf-8')})
+                else:
+                    return make_response('Unable to verify', 403, {'WWW-Authenticate': 'Authentication Failed'})
+        except Exception as ex:
+            connection.rollback()
+            print(ex)
+            return jsonify({'message': 'Error registering', 'error': ex})
 
 # Private Access
 @app.route('/setdata')
-#@token_required
+@token_required
 def insertData():
     try:
         jsonData = request.get_json()
@@ -92,7 +103,7 @@ def insertData():
 
 
 @app.route('/alldata')
-#@token_required
+# @token_required
 def getall():
     try:
         cursor.callproc('public."SELECT"')
