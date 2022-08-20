@@ -31,9 +31,7 @@ def token_required(func):
     return decorated
 
 
-
-
-app.get('/register')
+@app.route('/register')
 def register():
     username = request.form['username']
     password = request.form['password']
@@ -49,14 +47,13 @@ def register():
         return jsonify({'message': 'Error registering', 'error': ex})
 
 
-app.route('/login', methods=['GET','POST'])
+@app.route('/login', methods=['GET','POST'])
 def login():
     if request.method=='GET':
-        # if not session.get('logged_in'):
-        #     return render_template('login.html')
-        # else:
-        #     return 'Logged in currently'
-        return '<h1>Done<\h1>'
+        if not session.get('logged_in'):
+             return render_template('login.html')
+        else:
+            return 'Logged in currently'    
     else:
         username = request.form['username']
         password = request.form['password']
@@ -76,7 +73,7 @@ def login():
 
 
 # Private Access
-@app.post('/setdata')
+@app.route('/setdata')
 #@token_required
 def insertData():
     try:
@@ -94,7 +91,7 @@ def insertData():
 # Private Access
 
 
-@app.get('/alldata')
+@app.route('/alldata')
 #@token_required
 def getall():
     try:
@@ -106,12 +103,9 @@ def getall():
         print(ex)
         return jsonify({"message": "error", "error": ex})
 
-app.get('/a')
-def a():
-    return 'a'
 
 # Public Access
-@app.get('/lastone')
+@app.route('/lastone')
 def getone():
     try:
         cursor.callproc('public."SELECT_ONLY"')
