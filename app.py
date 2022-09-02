@@ -4,8 +4,14 @@ import jwt
 import psycopg2
 import bcrypt
 from functools import wraps
+from .views import *
+
 
 app = Flask(__name__)
+app.register_blueprint(login)
+app.register_blueprint(data)
+app.register_blueprint(register)
+
 app.config['SECRET_KEY'] = '5d3eb228512b0cf7810acdc26397c307'
 salt = bcrypt.gensalt()
 connection = psycopg2.connect(
@@ -31,23 +37,23 @@ def token_required(func):
     return decorated
 
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = str(request.form['username'])
-        password = str(request.form['password'])  # hola
-        bpassword = password.encode('utf-8')  # b'hola'
-        hash = str(bcrypt.hashpw(bpassword, salt))
-        try:
-            cursor.callproc('public."REGISTER"', (username, hash))
-            connection.commit()
-            return render_template('login.html')
-        except Exception as ex:
-            connection.rollback()
-            print(ex)
-            return jsonify({'message': 'Error registering', 'error': ex})
-    else:
-        return render_template("register.html")
+# @app.route('/register', methods=['GET', 'POST'])
+# def register():
+#     if request.method == 'POST':
+#         username = str(request.form['username'])
+#         password = str(request.form['password'])  # hola
+#         bpassword = password.encode('utf-8')  # b'hola'
+#         hash = str(bcrypt.hashpw(bpassword, salt))
+#         try:
+#             cursor.callproc('public."REGISTER"', (username, hash))
+#             connection.commit()
+#             return render_template('login.html')
+#         except Exception as ex:
+#             connection.rollback()
+#             print(ex)
+#             return jsonify({'message': 'Error registering', 'error': ex})
+#     else:
+#         return render_template("register.html")
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -84,45 +90,45 @@ def login():
             return jsonify({'message': 'Error registering', 'error': ex})
 
 # Private Access
-@app.route('/setdata')
-@token_required
-def insertData():
-    try:
-        jsonData = request.get_json()
-        temperature = str(jsonData["temperature"])
-        humidity = str(jsonData["humidity"])
-        cursor.callproc('public."INSERT"', (temperature, humidity))
-        connection.commit()
-        return jsonify({"message": "Success"})
-    except Exception as ex:
-        connection.rollback()
-        print(ex)
-        return jsonify({"message": "error", "error": ex})
+# @app.route('/setdata')
+# @token_required
+# def insertData():
+#     try:
+#         jsonData = request.get_json()
+#         temperature = str(jsonData["temperature"])
+#         humidity = str(jsonData["humidity"])
+#         cursor.callproc('public."INSERT"', (temperature, humidity))
+#         connection.commit()
+#         return jsonify({"message": "Success"})
+#     except Exception as ex:
+#         connection.rollback()
+#         print(ex)
+#         return jsonify({"message": "error", "error": ex})
 
 # Private Access
 
 
-@app.route('/alldata')
-# @token_required
-def getall():
-    try:
-        cursor.callproc('public."SELECT"')
-        rows = cursor.fetchall()
-        return render_template('template.html', objets=rows)
-    except Exception as ex:
-        connection.rollback()
-        print(ex)
-        return jsonify({"message": "error", "error": ex})
+# @app.route('/alldata')
+# # @token_required
+# def getall():
+#     try:
+#         cursor.callproc('public."SELECT"')
+#         rows = cursor.fetchall()
+#         return render_template('template.html', objets=rows)
+#     except Exception as ex:
+#         connection.rollback()
+#         print(ex)
+#         return jsonify({"message": "error", "error": ex})
 
 
 # Public Access
-@app.route('/lastone')
-def getone():
-    try:
-        cursor.callproc('public."SELECT_ONLY"')
-        rows = cursor.fetchall()
-        return render_template('template.html', objets=rows)
-    except Exception as ex:
-        connection.rollback()
-        print(ex)
-        return jsonify({"message": "error", "error": ex})
+# @app.route('/lastone')
+# def getone():
+#     try:
+#         cursor.callproc('public."SELECT_ONLY"')
+#         rows = cursor.fetchall()
+#         return render_template('template.html', objets=rows)
+#     except Exception as ex:
+#         connection.rollback()
+#         print(ex)
+#         return jsonify({"message": "error", "error": ex})
