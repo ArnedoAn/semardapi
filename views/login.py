@@ -1,9 +1,9 @@
-from flask import Blueprint, request, render_template
-from database import *
+from flask import Blueprint, request, render_template, session
+from database.dbController import *
 
-login = Blueprint('login', __name__, template_folder='templates', url_prefix='/login')
+loginEndP = Blueprint('loginEndP', __name__, template_folder='templates', url_prefix='/login')
 
-@login.get('/')
+@loginEndP.get('/')
 def loginGet():
     if not session.get('logged_in'):
         return render_template('login.html')
@@ -11,7 +11,7 @@ def loginGet():
         return 'Logged in currently'
 
 
-@login.post('/')
+@loginEndP.post('/')
 def loginPost():
     username = str(request.form['username'])
     password = str(request.form['password'])

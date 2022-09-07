@@ -1,16 +1,15 @@
 from flask import Blueprint, request, jsonify, render_template
-from controllers import encryptPwd
-from database import registerUser
+from database.dbController import registerUser
 
-register = Blueprint('register', __name__, template_folder='templates', url_prefix='/register')
+registerEndP = Blueprint('registerEndP', __name__, template_folder='templates', url_prefix='/register')
 
 
-@register.get('/')
+@registerEndP.get('/')
 def registerGet():
     return render_template("register.html")
 
 
-@register.post('/')
+@registerEndP.post('/')
 def registerPost():
     username = str(request.form['username'])
     password = str(request.form['password'])

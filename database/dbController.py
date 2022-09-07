@@ -1,17 +1,20 @@
 import psycopg2
-from controllers import encryptPwd,validatePwd
+from controllers.pwdController import encryptPwd,validatePwd
 from flask import jsonify, render_template, session, make_response, request
 import jwt
-from app import app
+import app
 
-connection = psycopg2.connect(
-    host='motty.db.elephantsql.com',
-    user='wwavtnoi',
-    password='!sem3rd123',
-    database='postgres'
-)
+# connection = psycopg2.connect(
+#     host='motty.db.elephantsql.com',
+#     user='wwavtnoi',
+#     password='!sem3rd123',
+#     database='postgres'
+# )
 
-cursor = connection.cursor()
+# cursor = connection.cursor()
+
+def helloW():
+    return render_template("login.html")
 
 def registerUser(username, pwd):
     pwdb = pwd.encode('utf-8')

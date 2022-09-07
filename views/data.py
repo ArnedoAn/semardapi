@@ -1,19 +1,19 @@
-from flask import Blueprint, request, jsonify, render_template
-from database import *
-from controllers import token_required
+from flask import Blueprint
+from database.dbController import *
+from controllers.jwtController import token_required
 
-data = Blueprint('data', __name__, template_folder='templates')
+dataEndP = Blueprint('dataEndP', __name__, template_folder='templates')
 
-@data.route('/setdata', methods=['POST'])
+@dataEndP.route('/setdata', methods=['POST'])
 @token_required
 def set():
     setData()
 
-@data.route('/alldata')
+@dataEndP.route('/alldata')
 @token_required
 def allData():
     getLastOne()
 
-@data.route('/lastone')
+@dataEndP.route('/lastone')
 def lastOne():
     getLastOne()
