@@ -1,19 +1,20 @@
-from flask import Blueprint, request, jsonify, render_template
+from flask import Blueprint, request, jsonify
 from database.dbController import registerUser
 
-registerEndP = Blueprint('registerEndP', __name__, template_folder='templates', url_prefix='/register')
+registerEndP = Blueprint('registerEndP', __name__, template_folder='templates')
 
 
-@registerEndP.get('/')
+@registerEndP.get('/register')
 def registerGet():
-    return render_template("register.html")
+    return 'test'
 
 
-@registerEndP.post('/')
+@registerEndP.post("/register")
 def registerPost():
-    username = str(request.form['username'])
-    password = str(request.form['password'])
+    jsonData = request.get_json()
+    username = str(jsonData['username'])
+    password = str(jsonData['password'])
     if registerUser(username, password):
-        return render_template('login.html')
+        return jsonify({'message':'Signed up'})
     else:
         return jsonify({'message': 'Error singin up'})

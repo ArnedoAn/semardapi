@@ -1,23 +1,31 @@
 import psycopg2
-from controllers.pwdController import encryptPwd,validatePwd
-from flask import jsonify, render_template, session, make_response, request
+import os
+from controllers.pwdController import encryptPwd, validatePwd
+from flask import jsonify, session, request
 import jwt
-import app
 
-# connection = psycopg2.connect(
-#     host='motty.db.elephantsql.com',
-#     user='wwavtnoi',
-#     password='!sem3rd123',
-#     database='postgres'
-# )
+key = os.environ.get('SECRET_KEY')
+print(key)
+key = '507150d33171df43a701bd1ad7d8018f7c071fbb'
+print(key)
 
-# cursor = connection.cursor()
+
+connection = psycopg2.connect(
+    host='semard.com.co',
+    user='semillero',
+    password='semard**2022',
+    database='postgres'
+)
+
+cursor = connection.cursor()
+
 
 def helloW():
-    return render_template("login.html")
+    return "Hello World"
+
 
 def registerUser(username, pwd):
-    pwdb = pwd.encode('utf-8')
+    pwdb = pwd.encode('utf8')
     hash = encryptPwd(pwdb)
     try:
         cursor.callproc('public."REGISTER"', (username, hash))
@@ -28,14 +36,15 @@ def registerUser(username, pwd):
         print(ex)
         return False
 
-def loginUser(username,password):
+
+def loginUser(username, password):
     try:
         cursor.callproc('public."LOGIN"', (username,))
         row = cursor.fetchone()
         print(row)
         if row is None:
             print(row)
-            return "Usuario no existe"
+            return [False, "Usuario no existe"]
         else:
             pwdHash = row[0]
             if validatePwd(password, pwdHash):
@@ -43,34 +52,37 @@ def loginUser(username,password):
                 token = jwt.encode({
                     'user': username,
                     'password': pwdHash
-                }, app.config['SECRET_KEY'])
-                return jsonify({'message': 'Loggen in', 'token': token.decode('utf-8')})
+                }, key)
+                return [True, token.decode('utf-8')]
             else:
-                return make_response('Unable to verify', 403, {'WWW-Authenticate': 'Authentication Failed'})
+                return [False, "Invalid user o password"]
     except Exception as ex:
         connection.rollback()
         print(ex)
-        return jsonify({'message': 'Error registering', 'error': ex})
+        return [False, ex]
+
 
 def getLastOne():
     try:
         cursor.callproc('public."SELECT_ONLY"')
         rows = cursor.fetchall()
-        return render_template('template.html', objets=rows)
+        return jsonify(rows)
     except Exception as ex:
         connection.rollback()
         print(ex)
         return jsonify({"message": "error", "error": ex})
 
+
 def getAllData():
     try:
         cursor.callproc('public."SELECT"')
         rows = cursor.fetchall()
-        return render_template('template.html', objets=rows)
+        return jsonify(rows)
     except Exception as ex:
         connection.rollback()
         print(ex)
-        return jsonify({"message": "error", "error": ex})  
+        return jsonify({"message": "error", "error": ex})
+
 
 def setData():
     try:
@@ -83,5 +95,4 @@ def setData():
     except Exception as ex:
         connection.rollback()
         print(ex)
-        return jsonify({"message": "error", "error": ex})                  
-       
+        return jsonify({"message": "error", "error": ex})

@@ -1,9 +1,8 @@
-import bcrypt
+from werkzeug.security import generate_password_hash, check_password_hash
 
-salt = bcrypt.gensalt()
+def encryptPwd(pwd):
+    return generate_password_hash(pwd)
 
 def validatePwd(password, pwdHash):
-    return bcrypt.checkpw(password, pwdHash)
-
-def encryptPwd(password):
-    return str(bcrypt.hashpw(password, salt))
+    return check_password_hash(pwdHash,password)
+     
