@@ -5,16 +5,12 @@ from flask import jsonify, session, request
 import jwt
 
 key = os.environ.get('SECRET_KEY')
-print(key)
-key = '507150d33171df43a701bd1ad7d8018f7c071fbb'
-print(key)
-
 
 connection = psycopg2.connect(
-    host='semard.com.co',
-    user='semillero',
-    password='semard**2022',
-    database='postgres'
+    host=os.environ.get('DB_HOST'),
+    user=os.environ.get('DB_USER'),
+    password=os.environ.get('DB_PWD'),
+    database=os.environ.get('DB_DB')
 )
 
 cursor = connection.cursor()
