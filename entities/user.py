@@ -1,58 +1,57 @@
 from database.database import DatabaseConnection as db
-from password_hash import PasswordHasher as pwdHasher
+from entities.password_hash import PasswordHasher as pwdHasher
 
 
 class User:
-    def __init__(self, id: str, name: str, email: str, password: str):
-        self.id = id
+    def __init__(self, dni: str, name: str, password: str):
+        self.dni = dni
         self.name = name
-        self.email = email
         self.__password = pwdHasher.hashPassword(password)
 
     def to_dict(self):
         return {
-            'username': self.name,
+            'name': self.name,
             'password': self.__password,
-            'email': self.email
         }
 
     def setPassword(self, password):
         self.__password = pwdHasher.hashPassword(password)
 
     def add_user(self):
-        query = "INSERT INTO users (id, name, password, email) VALUES (%s,%s, %s, %s)"
-        params = (self.id, self.name, self.__password, self.email)
+        query = "INSERT INTO users (dni, name, password) VALUES (%s,%s, %s)"
+        params = (self.dni, self.name, self.__password)
         result = db.get_instance().query(query, params)
         if result is False:
             return False
         return result
 
     def remove_user(self):
-        query = "DELETE FROM users WHERE id = %s"
-        params = (self.id,)
+        query = "DELETE FROM users WHERE dni = %s"
+        params = (self.dni,)
         result = db.get_instance().query(query, params)
         if result is False:
             return False
         return result
 
     def update_user(self):
-        query = "UPDATE users SET name = %s, password = %s, email = %s WHERE id = %s"
-        params = (self.name, self.__password, self.email, self.id)
+        query = "UPDATE users SET name = %s, password = %s WHERE dni = %s"
+        params = (self.name, self.__password, self.dni)
         result = db.get_instance().query(query, params)
         if result is False:
             return False
         return result
 
     def login(self):
-        query = "SELECT password FROM users WHERE id = %s"
-        params = (self.id,)
+        query = "SELECT password FROM users WHERE dni = %s"
+        params = (self.dni,)
         result = db.get_instance().query(query, params)
         if result is False or result is None or len(result) == 0:
             return False
-        if pwdHasher.validatePassword(self.__password, result[0]):
+        if pwdHasher.valdniatePassword(self.__password, result[0]):
             return True
         return False
 
     @staticmethod
     def from_dict(user_dict):
-        return User(user_dict.get('id', None), user_dict.get('name', None), user_dict.get('password', 0), user_dict.get('email', None))
+        print(user_dict.get('dni', None), user_dict.get('name', None), user_dict.get('password', 0))
+        return User(user_dict.get('dni', None), user_dict.get('name', None), user_dict.get('password', 0))

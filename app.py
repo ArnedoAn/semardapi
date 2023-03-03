@@ -13,7 +13,12 @@ from controllers.login_controller import *
 def login_post():
     return login(request.get_json())
 
-@app.router('/test', methods=['POST'])
+@app.route('/test', methods=['POST'])
 @require_token()
 def test():
     return 'test'
+
+@app.route('/register', methods=['POST'])
+def register_post():
+    print(request.get_json())
+    return register(request.get_json())

@@ -4,7 +4,7 @@ class PasswordHasher:
     def __init__(self):
         pass
 
-    def hashPassword(self, pwd):
+    def hashPassword(pwd):
         return generate_password_hash(pwd)
 
     def validatePassword(self, password, pwdHash):
