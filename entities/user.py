@@ -6,7 +6,7 @@ class User:
     def __init__(self, dni: str, name: str, password: str):
         self.dni = dni
         self.name = name
-        self.__password = pwdHasher.hashPassword(password)
+        self.__password = str(pwdHasher.hashPassword(password))
 
     def to_dict(self):
         return {
@@ -18,8 +18,10 @@ class User:
         self.__password = pwdHasher.hashPassword(password)
 
     def add_user(self):
-        query = "INSERT INTO users (dni, name, password) VALUES (%s,%s, %s)"
+        query = "INSERT INTO public.users (dni, name, password) VALUES (%s,%s, %s)"
         params = (self.dni, self.name, self.__password)
+        print(query)
+        print(params)
         result = db.get_instance().query(query, params)
         if result is False:
             return False
@@ -54,4 +56,5 @@ class User:
     @staticmethod
     def from_dict(user_dict):
         print(user_dict.get('dni', None), user_dict.get('name', None), user_dict.get('password', 0))
-        return User(user_dict.get('dni', None), user_dict.get('name', None), user_dict.get('password', 0))
+        return User(user_dict.get('dni', None), user_dict.get('name', None), str(user_dict.get('password', 0)))
+    

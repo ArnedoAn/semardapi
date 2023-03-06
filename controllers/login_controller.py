@@ -1,4 +1,5 @@
 from entities.user import User
+from database.database import DatabaseConnection as db
 from flask import jsonify
 from app import auth_manager
 
@@ -16,3 +17,7 @@ def register(data):
     if result is False:
         return jsonify({'message': 'Error adding user'}), 500
     return jsonify({'message': 'User added successfully'}), 200
+
+def tester():
+    result = db.get_instance().query("SELECT * FROM users")
+    return jsonify(result), 200

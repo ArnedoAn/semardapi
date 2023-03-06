@@ -14,9 +14,10 @@ def login_post():
     return login(request.get_json())
 
 @app.route('/test', methods=['POST'])
-@require_token()
+# @require_token()
 def test():
-    return 'test'
+    result = tester()
+    return result
 
 @app.route('/register', methods=['POST'])
 def register_post():

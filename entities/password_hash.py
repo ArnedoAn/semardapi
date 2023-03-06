@@ -7,5 +7,5 @@ class PasswordHasher:
     def hashPassword(pwd):
         return generate_password_hash(pwd)
 
-    def validatePassword(self, password, pwdHash):
+    def validatePassword(password, pwdHash):
         return check_password_hash(pwdHash,password)
