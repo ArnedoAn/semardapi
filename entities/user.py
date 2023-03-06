@@ -49,7 +49,8 @@ class User:
         result = db.get_instance().query(query, params)
         if result is False or result is None or len(result) == 0:
             return False
-        if pwdHasher.valdniatePassword(self.__password, result[0]):
+        if pwdHasher.validatePassword(self.__password, result[0]):
+            print("todo god")
             return True
         return False
 

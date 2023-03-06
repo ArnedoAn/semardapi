@@ -8,4 +8,7 @@ class PasswordHasher:
         return generate_password_hash(pwd)
 
     def validatePassword(password, pwdHash):
+        print(str(password))
+        print(pwdHash)
+        print(check_password_hash(pwdHash, password))
         return check_password_hash(pwdHash,password)

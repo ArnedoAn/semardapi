@@ -40,9 +40,11 @@ class DatabaseConnection:
             cur = self.conn.cursor()
             cur.execute(query, params)
             if query.lower().startswith('select'):
-                return True
-            # result = cur.fetchall()
-            # return result
+                result = cur.fetchall()
+                self.conn.commit()
+                return result
+            self.conn.commit()
+            return True 
         except (Exception, psycopg2.DatabaseError) as error:
             print(error, "Esto es un error")
             self.conn.rollback()
