@@ -8,8 +8,14 @@ def login(data):
     result = user.login()
     if result is False:
         return jsonify({'message': 'Invalid credentials'}), 401
-    token = auth_manager.auth_token(user.id)
-    return jsonify({'token': token}), 200
+    token = auth_manager.auth_token(user.name, user.dni)
+    #refresh_token = auth_manager.refresh_token(user.name)
+    return {
+        "auth_token": token.signed,
+        # "refresh_token": refresh_token.signed
+    }, 200
+    # token = auth_manager.auth_token(user.name)
+    # return jsonify({'token': token}), 200
 
 def register(data):
     user = User.from_dict(data)
