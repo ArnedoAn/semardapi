@@ -6,8 +6,7 @@ class User:
     def __init__(self, dni: str, name: str, password: str):
         self.dni = dni
         self.name = name
-        self.__password = password
-        #self.__password = str(pwdHasher.hashPassword(password))
+        self.__password = str(pwdHasher.hashPassword(password))
 
     def to_dict(self):
         return {
@@ -24,7 +23,6 @@ class User:
         print(query)
         print(params)
         result = db.get_instance().query(query, params)
-    
         if result is False:
             return False
         return result
@@ -45,13 +43,13 @@ class User:
             return False
         return result
 
-    def login(self):
+    def login(self, pwd):
         query = "SELECT password FROM users WHERE dni = %s"
         params = (self.dni,)
         result = db.get_instance().query(query, params)
         if result is False or result is None or len(result) == 0:
             return False
-        if pwdHasher.validatePassword(self.__password, result[0]):
+        if pwdHasher.validatePassword(pwd, result[0]):
             return True
         return False
 
