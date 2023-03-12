@@ -1,5 +1,5 @@
 from entities.user import User
-from database.database import DatabaseConnection as db
+from database.db_postgresql import DBPostgresql as db
 from flask import jsonify
 from app import auth_manager
 
@@ -26,5 +26,5 @@ def register(data):
 
 
 def tester():
-    result = db.get_instance().query("SELECT * FROM users")
+    result = db.get_instance().querys("SELECT * FROM users")
     return jsonify(result), 200

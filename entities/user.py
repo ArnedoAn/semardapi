@@ -1,4 +1,4 @@
-from database.database import DatabaseConnection as db
+from database.db_postgresql import DBPostgresql as db
 from entities.password_hash import PasswordHasher as pwdHasher
 
 
@@ -22,7 +22,7 @@ class User:
         params = (self.dni, self.name, self.__password)
         print(query)
         print(params)
-        result = db.get_instance().query(query, params)
+        result = db.get_instance().querys(query, params)
         if result is False:
             return False
         return result
@@ -46,7 +46,8 @@ class User:
     def login(self, pwd):
         query = "SELECT password FROM users WHERE dni = %s"
         params = (self.dni,)
-        result = db.get_instance().query(query, params)
+        result = db.get_instance().querys(query, params)
+
         if result is False or result is None or len(result) == 0:
             return False
         if pwdHasher.validatePassword(pwd, result[0]):
