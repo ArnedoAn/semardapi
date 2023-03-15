@@ -1,6 +1,6 @@
 from flask import Flask, request
 from flask_pyjwt import AuthManager, require_token
-from flasgger import Swagger
+from flasgger import Swagger, swag_from
 
 app = Flask(__name__)
 auth_manager = AuthManager(app)
@@ -12,7 +12,7 @@ from entities.user import *
 from controllers.login_controller import *
 
 @app.route('/')
-@swag_from('swagger/index.yaml')
+@swag_from('index.yaml')
 def index():
     return 'Hello World!'
 
