@@ -4,7 +4,9 @@ from flasgger import Swagger, swag_from
 
 app = Flask(__name__)
 auth_manager = AuthManager(app)
-swagger = Swagger(app)
+# set "/" endpoint on swagger
+
+swagger = Swagger(app, template_file='index.yml')
 
 from entities.nodo import *
 from entities.jwt_auth import *
@@ -12,9 +14,9 @@ from entities.user import *
 from controllers.login_controller import *
 
 @app.route('/')
-@swag_from('index.yaml')
+@swag_from('/index.yml')
 def index():
-    return 'Hello World!'
+    return "hello world"
 
 @app.route('/login', methods=['POST'])
 def login_post():
