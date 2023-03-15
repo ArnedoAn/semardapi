@@ -1,8 +1,8 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "API de prueba",
-    "description": "Una API para fines de prueba",
+    "title": "API-Test Semard",
+    "description": "Una API para fines de prueba para el backend del proyecto Semard",
     "version": "1.0"
   },
   "paths": {
@@ -20,11 +20,11 @@
             "schema": {
               "type": "object",
               "properties": {
-                "nombre": {
+                "name": {
                   "type": "string",
                   "description": "Nombre del usuario"
                 },
-                "contraseña": {
+                "password": {
                   "type": "string",
                   "description": "Contraseña del usuario"
                 }
@@ -56,11 +56,11 @@
             "schema": {
               "type": "object",
               "properties": {
-                "nombre": {
+                "name": {
                   "type": "string",
                   "description": "Nombre del usuario"
                 },
-                "contraseña": {
+                "password": {
                   "type": "string",
                   "description": "Contraseña del usuario"
                 },
