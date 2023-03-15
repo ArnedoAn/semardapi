@@ -1,29 +1,30 @@
 from flask import Flask, request
 from flask_pyjwt import AuthManager, require_token
-from flasgger import Swagger, swag_from
-
+from flask_swagger_ui import get_swaggerui_blueprint
 app = Flask(__name__)
 auth_manager = AuthManager(app)
-# set "/" endpoint on swagger
 
-swagger_config = Swagger.DEFAULT_CONFIG
-swagger_config['openapi'] = '3.0.2'
-swagger_config['title'] = 'API Title'
-swagger_config['description'] = 'API description'
-swagger_config['version'] = '1.0.0'
-swagger_config['swagger'] = 'index.yml'
-
-swagger = Swagger(app, config=swagger_config, parse=True)
 
 from entities.nodo import *
 from entities.jwt_auth import *
 from entities.user import *
 from controllers.login_controller import *
 
-@app.route('/')
-@swag_from('/index.yml')
-def index():
-    return "hello world"
+# Configuración de Swagger UI
+SWAGGER_URL = '/'  # URL para acceder a la documentación Swagger
+API_URL = '/static/index.yml'  # URL de la especificación Swagger/OpenAPI
+
+# Creación del blueprint de Swagger UI
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "Semard API"  # Nombre de tu API
+    }
+)
+
+# Registro del blueprint en la aplicación Flask
+app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
 @app.route('/login', methods=['POST'])
 def login_post():
