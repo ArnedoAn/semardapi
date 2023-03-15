@@ -12,7 +12,7 @@ from controllers.login_controller import *
 
 # Configuración de Swagger UI
 SWAGGER_URL = '/'  # URL para acceder a la documentación Swagger
-API_URL = '/static/index.yml'  # URL de la especificación Swagger/OpenAPI
+API_URL = '/static/swagger.json'  # URL de la especificación Swagger/OpenAPI
 
 # Creación del blueprint de Swagger UI
 swaggerui_blueprint = get_swaggerui_blueprint(
