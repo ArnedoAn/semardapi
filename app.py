@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, redirect, url_for
 from flask_pyjwt import AuthManager, require_token
 from flask_swagger_ui import get_swaggerui_blueprint
 
@@ -28,7 +28,7 @@ app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
 @app.route("/")
 def hello():
-    return "Hello World!"
+    return redirect("/apidocs")
 
 @app.route('/login', methods=['POST'])
 def login_post():
