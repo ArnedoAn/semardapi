@@ -1,0 +1,97 @@
+swagger: "2.0"
+info:
+  title: Ejemplo de API con Swagger
+  description: Documentación de una API Flask con Swagger
+  version: "1.0"
+
+schemes:
+  - http
+
+basePath: /
+
+paths:
+
+  /login:
+    post:
+      summary: Iniciar sesión
+      description: Inicia sesión con un nombre de usuario y contraseña
+      consumes:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              nombre:
+                type: string
+              contraseña:
+                type: string
+            example:
+              nombre: "usuario123"
+              contraseña: "contraseña123"
+      responses:
+        "200":
+          description: Sesión iniciada correctamente
+          schema:
+            type: object
+            properties:
+              mensaje:
+                type: string
+                example: "¡Bienvenido, usuario123!"
+
+  /register:
+    post:
+      summary: Registro de usuario
+      description: Registra a un usuario con un nombre de usuario, contraseña y DNI
+      consumes:
+        - application/json
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            properties:
+              nombre:
+                type: string
+              contraseña:
+                type: string
+              dni:
+                type: string
+            example:
+              nombre: "usuario123"
+              contraseña: "contraseña123"
+              dni: "12345678A"
+      responses:
+        "200":
+          description: Usuario registrado correctamente
+          schema:
+            type: object
+            properties:
+              mensaje:
+                type: string
+                example: "¡Registro exitoso! Bienvenido, usuario123."
+
+  /test:
+    get:
+      summary: Prueba de autenticación
+      description: Prueba que requiere autenticación mediante un token JWT
+      consumes:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          type: string
+          required: true
+          description: Token de autenticación JWT
+      responses:
+        "200":
+          description: Prueba exitosa
+          schema:
+            type: object
+            properties:
+              mensaje:
+                type: string
+                example: "¡Prueba exitosa! Bienvenido de nuevo, usuario123."

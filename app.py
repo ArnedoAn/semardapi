@@ -1,13 +1,20 @@
 from flask import Flask, request
 from flask_pyjwt import AuthManager, require_token
+from flasgger import Swagger
 
 app = Flask(__name__)
 auth_manager = AuthManager(app)
+swagger = Swagger(app)
 
 from entities.nodo import *
 from entities.jwt_auth import *
 from entities.user import *
 from controllers.login_controller import *
+
+@app.route('/')
+@swag_from('swagger/index.yaml')
+def index():
+    return 'Hello World!'
 
 @app.route('/login', methods=['POST'])
 def login_post():
