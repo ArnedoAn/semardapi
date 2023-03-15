@@ -6,7 +6,14 @@ app = Flask(__name__)
 auth_manager = AuthManager(app)
 # set "/" endpoint on swagger
 
-swagger = Swagger(app, template_file='index.yml')
+swagger_config = Swagger.DEFAULT_CONFIG
+swagger_config['openapi'] = '3.0.2'
+swagger_config['title'] = 'API Title'
+swagger_config['description'] = 'API description'
+swagger_config['version'] = '1.0.0'
+swagger_config['swagger'] = 'index.yml'
+
+swagger = Swagger(app, config=swagger_config, parse=True)
 
 from entities.nodo import *
 from entities.jwt_auth import *
