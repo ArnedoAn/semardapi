@@ -20,7 +20,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "name": {
+                "dni": {
                   "type": "string",
                   "description": "Nombre del usuario"
                 },
