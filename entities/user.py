@@ -50,12 +50,7 @@ class User:
 
         if result is False or result is None or len(result) == 0:
             return False
-<<<<<<< HEAD
-        if pwdHasher.validatePassword(self.__password, result[0]):
-            print("todo god")
-=======
         if pwdHasher.validatePassword(pwd, result[0]):
->>>>>>> class_paradigm
             return True
         return False
 
