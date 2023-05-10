@@ -5,3 +5,4 @@ Dockerfile
 *.yml
 .dockerignore
 .vscode
+.venv
