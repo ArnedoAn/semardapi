@@ -46,4 +46,5 @@ def register_post():
     return register(request.get_json())
 
 if __name__ == '__main__':
-    app.run()
+    context = ('/etc/letsencrypt/live/api.semard.co/fullchain.pem', '/etc/letsencrypt/live/api.semard.co/privkey.pem')
+    app.run(host='0.0.0.0', port=5000, ssl_context=context)
